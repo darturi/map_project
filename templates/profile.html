@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css' rel='stylesheet' />
+
+    <style>
+        .flex-container {
+            display: flex;
+        }
+
+        .flex-child-one {
+            flex: 1;
+            border: 1px solid black;
+        }
+
+        .flex-child-two {
+            flex: 0.3;
+            border: 1px solid blue;
+        }
+
+        .flex-child-one:first-child {
+            margin-right: 20px;
+        }
+    </style>
+
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Django Profile</h1>
+
+    <div class="flex-container">
+
+        <!--Div containing map-->
+        <div id='map' style='width: 70%; height: 550px;' class="flex-child-one"></div>
+        <script>
+            mapboxgl.accessToken = 'pk.eyJ1IjoiZGFuaWVsYXJ0dXJpIiwiYSI6ImNsbTJ2c2ZrYjF6bHozcm85d3phc2c1bTUifQ.Ubn6vNMeUlWJ4iBomj9_BA';
+            const map = new mapboxgl.Map({
+                container: 'map', // container ID
+                style: 'mapbox://styles/mapbox/streets-v12', // style URL
+                center: [-73.577207, 45.507601], // starting position [lng, lat]
+                zoom: 9, // starting zoom
+            });
+
+            var marker = new mapboxgl.Marker()
+                .setLngLat([-73.57936, 45.516953])
+                .setPopup(new mapboxgl.Popup().setHTML("<p>{{ address.address }}</p>"))
+                .addTo(map);
+
+
+        </script>
+
+        <!--Div containing form to add markers-->
+        <div class="flex-child-two">
+            <form method='POST'>
+                {% csrf_token %}
+                {{ form }}
+                <input type="submit" value="submit address" />
+            </form>
+        </div>
+    </div>
+    <!--{% for address in addresses %}
+    <p>address.address</p>
+    {% endfor%}-->
+</body>
+
+</html>
+
+{% endblock content %}
