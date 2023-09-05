@@ -51,12 +51,14 @@
                 zoom: 9, // starting zoom
             });
 
+        </script>
+        <script>
+            {% for address in addresses %}
             var marker = new mapboxgl.Marker()
-                .setLngLat([-73.57936, 45.516953])
+                .setLngLat(['{{ address.long }}', '{{ address.lat }}'])
                 .setPopup(new mapboxgl.Popup().setHTML("<p>{{ address.address }}</p>"))
                 .addTo(map);
-
-
+            {% endfor %}
         </script>
 
         <!--Div containing form to add markers-->
@@ -68,9 +70,9 @@
             </form>
         </div>
     </div>
-    <!--{% for address in addresses %}
-    <p>address.address</p>
-    {% endfor%}-->
+    {% for address in addresses %}
+    <p>{{ address.long }}</p>
+    {% endfor%}
 </body>
 
 </html>
