@@ -22,5 +22,5 @@ class Address(models.Model):
     def __str__(self) -> str:
         return self.address
 
-    # def get_absolute_url(self):
-    #    return reverse("address_detail", kwargs={"pk": self.pk})
+    def get_absolute_url(self):
+        return reverse("profile")

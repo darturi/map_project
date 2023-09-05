@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 <!DOCTYPE html>
@@ -63,9 +64,9 @@
 
         <!--Div containing form to add markers-->
         <div class="flex-child-two">
-            <form method='POST'>
+            <form action="" method='POST'>
                 {% csrf_token %}
-                {{ form }}
+                {{ form|crispy }}
                 <input type="submit" value="submit address" />
             </form>
         </div>
