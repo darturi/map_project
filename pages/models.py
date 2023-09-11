@@ -39,11 +39,12 @@ class Comment(models.Model):
         on_delete=models.CASCADE,
     )
     comment = models.CharField(max_length=140)
+    date = models.DateTimeField(auto_now_add=True, null=True)
 
     # Will return the comment content as a string
     def __str__(self):
         return self.comment
 
-    # Will return the url associated with "article_list"
+    # Will return the url associated with "profile"
     def get_absolute_url(self):
         return reverse("profile")

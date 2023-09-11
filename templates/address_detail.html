@@ -66,8 +66,19 @@
     <!--Div containing form to comment about marker-->
     <div class="flex-child-two">
         {% for comment in object.comment_set.all %}
-        <p>
-            {{ comment.author }} &middot; {{ comment }}
+        <p><b>{{ comment.author }}</b> &middot; <i>{{ comment.date }}</i>
+            <!--If statement that will allow comment deletion if user is the one that posted said comment-->
+            {% if comment.author.pk == request.user.pk %}
+            &middot;
+            <a href="#">Delete Comment</a>
+
+            <!--<form method="POST" action="{% url 'comment_delete' comment.pk %}">
+            {% csrf_token %}<input type="submit" value="DELETE">
+        </form>-->
+            {% endif %}
+
+            <br />
+            {{ comment }}
         </p>
         {% endfor %}
         <h4>Add a comment</h4>

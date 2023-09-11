@@ -1,10 +1,10 @@
 from django.views.generic import TemplateView, FormView, DetailView
-from .models import Address
+from .models import Address, Comment
 from django.views import View
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, DeleteView
 from django.urls import reverse_lazy, reverse
 from .forms import CommentForm
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic.detail import SingleObjectMixin
 
 
@@ -64,6 +64,35 @@ class CommentPost(SingleObjectMixin, FormView):
     def get_success_url(self):
         address = self.object
         return reverse("address_detail", kwargs={"pk": address.pk})
+
+
+"""
+class CommentDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Address
+    template_name = "address_delete.html"
+
+    def get_success_url(self):
+        address = self.object
+        return reverse("address_detail", kwargs={"pk": address.pk})
+
+    def test_func(self):
+        return True
+"""
+
+
+class CommentDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Comment
+    template_name = "article_delete.html"
+    # redirect to article list page upon success
+
+    def get_success_url(self):
+        address = self.object
+        return reverse("address_detail", kwargs={"pk": address.pk})
+
+    # Tests if the author of the article is the same as the user
+    def test_func(self):
+        obj = self.get_object()
+        return obj.author == self.request.user
 
 
 # View for viewing one specific address in detail
