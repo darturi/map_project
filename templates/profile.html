@@ -50,30 +50,93 @@
                 style: 'mapbox://styles/mapbox/streets-v12', // style URL
                 center: [-73.577207, 45.507601], // starting position [lng, lat]
                 zoom: 9, // starting zoom
+                //interactive: true,
             });
+            /*
 
-        </script>
-        <script>
+            const changeText = document.querySelector("#change-text");
+
+            class ClickableMarker extends mapboxgl.Marker {
+                // new method onClick, sets _handleClick to a function you pass in
+                onClick(handleClick) {
+                    this._handleClick = handleClick;
+                    return this;
+                }
+
+                // the existing _onMapClick was there to trigger a popup
+                // but we are hijacking it to run a function we define
+                _onMapClick(e) {
+                    const targetElement = e.originalEvent.target;
+                    const element = this._element;
+
+                    if (this._handleClick && (targetElement === element || element.contains((targetElement)))) {
+                        this._handleClick();
+                    }
+                }
+            };
+            */
+
             {% for address in addresses %}
+
+
             var marker = new mapboxgl.Marker()
                 .setLngLat(['{{ address.long }}', '{{ address.lat }}'])
-                .setPopup(new mapboxgl.Popup().setHTML("<p>{{ address.address }}</p>"))
+                .setPopup(new mapboxgl.Popup().setHTML("<p>{{ address.address }}</p> <form action='{{ address.get_absolute_url }}'><input type='submit' value='discuss'/></form>"))
                 .addTo(map);
+
+
+            /*
+            new ClickableMarker()
+                .setLngLat(['{{ address.long }}', '{{ address.lat }}'])
+                //.setPopup(new mapboxgl.Popup().setHTML("<p>{{ address.address }}</p>"))
+                .onClick(function () {
+                    changeText.textContent = "CHANGED";
+                })
+                .addTo(map);
+                */
+
+            /*
+            const marker = new mapboxgl.Marker()
+                .setLngLat(['{{ address.long }}', '{{ address.lat }}'])
+                .setPopup(new mapboxgl.Popup().setHTML("<p>{{ address.address }}</p>"))
+                .addTo(this.map);
+            // use GetElement to get HTML Element from marker and add event
+            marker.getElement().addEventListener('click', () => {
+                alert("Clicked");
+            });
+            */
+            /*
+            this.service.getAllData().forEach(e => {
+                // create MapBox Marker
+                const marker = new mapboxgl.Marker().setLngLat([e.lon, e.lat]).addTo(this.map);
+                // use GetElement to get HTML Element from marker and add event
+                marker.getElement().addEventListener('click', () => {
+                    alert("Clicked");
+                });
+            });
+            */
+
             {% endfor %}
+
         </script>
 
         <!--Div containing form to add markers-->
         <div class="flex-child-two">
-            <form action="" method='POST'>
+            <form method='POST'>
                 {% csrf_token %}
                 {{ form|crispy }}
                 <input type="submit" value="submit address" />
             </form>
         </div>
     </div>
+    <!--
     {% for address in addresses %}
     <p>{{ address.long }}</p>
     {% endfor%}
+    -->
+    <div>
+        <p id="change-text">TEXT THAT SHOULD CHANGE</p>
+    </div>
 </body>
 
 </html>

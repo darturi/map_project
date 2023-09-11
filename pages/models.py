@@ -1,5 +1,7 @@
 import geocoder
 from django.urls import reverse
+from django.conf import settings
+
 
 from django.db import models
 
@@ -11,6 +13,10 @@ class Address(models.Model):
     address = models.TextField()
     lat = models.FloatField(blank=True, null=True)
     long = models.FloatField(blank=True, null=True)
+    # author = models.ForeignKey(
+    #    settings.AUTH_USER_MODEL,
+    #    on_delete=models.CASCADE,
+    # )
 
     def save(self, *args, **kwargs):
         g = geocoder.mapbox(self.address, key=mapbox_access_token)
@@ -22,5 +28,22 @@ class Address(models.Model):
     def __str__(self) -> str:
         return self.address
 
+    def get_absolute_url(self):
+        return reverse("address_detail", kwargs={"pk": self.pk})
+
+
+class Comment(models.Model):
+    address = models.ForeignKey(Address, on_delete=models.CASCADE)
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
+    comment = models.CharField(max_length=140)
+
+    # Will return the comment content as a string
+    def __str__(self):
+        return self.comment
+
+    # Will return the url associated with "article_list"
     def get_absolute_url(self):
         return reverse("profile")

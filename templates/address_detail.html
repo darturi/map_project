@@ -1,0 +1,105 @@
+<!--Import crispy forms for comments-->
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css' rel='stylesheet' />
+
+    <style>
+        .flex-container {
+            display: flex;
+        }
+
+        .flex-child-one {
+            flex: 0.9;
+            border: 1px solid black;
+        }
+
+        .flex-child-two {
+            flex: 1;
+            border: 1px solid blue;
+        }
+
+        .flex-child-one:first-child {
+            margin-right: 20px;
+        }
+    </style>
+
+    <title>Document</title>
+</head>
+
+<!--Div for displaying Address name-->
+<div class="address-entry">
+    <h2>{{ object.address }}</h2>
+</div>
+
+<div class="flex-container">
+
+    <!--Div containing map-->
+    <div id='map' style='width: 30%; height: 550px;' class="flex-child-one"></div>
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoiZGFuaWVsYXJ0dXJpIiwiYSI6ImNsbTJ2c2ZrYjF6bHozcm85d3phc2c1bTUifQ.Ubn6vNMeUlWJ4iBomj9_BA';
+        const map = new mapboxgl.Map({
+            container: 'map', // container ID
+            style: 'mapbox://styles/mapbox/streets-v12', // style URL
+            center: ['{{ object.long }}', '{{ object.lat }}'], // starting position [lng, lat]
+            zoom: 14, // starting zoom
+            //interactive: true,
+        });
+
+        var marker = new mapboxgl.Marker()
+            .setLngLat(['{{ object.long }}', '{{ object.lat }}'])
+            .setPopup(new mapboxgl.Popup().setHTML("<p>{{ address.address }}</p>"))
+            .addTo(map);
+
+    </script>
+
+    <!--Div containing form to comment about marker-->
+    <div class="flex-child-two">
+        {% for comment in object.comment_set.all %}
+        <p>
+            {{ comment.author }} &middot; {{ comment }}
+        </p>
+        {% endfor %}
+        <h4>Add a comment</h4>
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button class="btn btn-success ml-2" type="submit">Save</button>
+        </form>
+    </div>
+</div>
+
+<div>
+    <!--Div for displaying comments-->
+    <!--
+    <hr>
+    {% for comment in pages_comment.all %}
+    <p>
+        {{ comment.author }} &middot; {{ comment }}
+    </p>
+    {% endfor %}
+    </hr>
+    -->
+    <!--Section for users to be able to add comments with crispy forms
+    <h4>Add a comment</h4>
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button class="btn btn-success ml-2" type="submit">Save</button>
+    </form>
+    -->
+    <p>
+        Back to <a href="{% url 'profile' %}">Profile</a>.
+    </p>
+</div>
+{% endblock content %}
