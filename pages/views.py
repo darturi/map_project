@@ -12,7 +12,7 @@ class HomePageView(TemplateView):
     template_name = "home.html"
 
 
-class ProfileView(CreateView):
+class ProfileView(LoginRequiredMixin, CreateView):
     template_name = "profile.html"
     model = Address
     fields = ("address",)

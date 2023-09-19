@@ -13,10 +13,10 @@ class Address(models.Model):
     address = models.TextField()
     lat = models.FloatField(blank=True, null=True)
     long = models.FloatField(blank=True, null=True)
-    # author = models.ForeignKey(
-    #    settings.AUTH_USER_MODEL,
-    #    on_delete=models.CASCADE,
-    # )
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True
+    )
+    description = models.CharField(max_length=140, null=True)
 
     def save(self, *args, **kwargs):
         g = geocoder.mapbox(self.address, key=mapbox_access_token)
