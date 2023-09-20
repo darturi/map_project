@@ -82,11 +82,11 @@ class CommentDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 class CommentDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Comment
-    template_name = "article_delete.html"
+    template_name = "comment_delete.html"
     # redirect to article list page upon success
 
     def get_success_url(self):
-        address = self.object
+        address = self.object.address
         return reverse("address_detail", kwargs={"pk": address.pk})
 
     # Tests if the author of the article is the same as the user

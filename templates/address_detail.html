@@ -70,7 +70,7 @@
             <!--If statement that will allow comment deletion if user is the one that posted said comment-->
             {% if comment.author.pk == request.user.pk %}
             &middot;
-            <a href="#">Delete Comment</a>
+            <a href="{% url 'comment_delete' comment.pk %}">Delete Comment</a>
 
             <!--<form method="POST" action="{% url 'comment_delete' comment.pk %}">
             {% csrf_token %}<input type="submit" value="DELETE">
