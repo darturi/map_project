@@ -66,21 +66,6 @@
         <div id='map' style='width: 100%; height: 550px;'></div>
         <script>
 
-            // Need to add functionality so starting zoom is variable
-            /*
-            var center_x = 0;
-            var center_y = 0;
-            var address_counter = 0;
-            {% for address in addresses %}
-            center_x = center_x + '{{ address.long }}';
-            center_y = center_y + '{{ address.lat }}';
-            address_counter = address_counter + 1;
-            {% endfor %}
-            center_x = center_x / address_counter;
-            center_y = center_y / address_counter;
-            */
-
-
             mapboxgl.accessToken = 'pk.eyJ1IjoiZGFuaWVsYXJ0dXJpIiwiYSI6ImNsbTJ2c2ZrYjF6bHozcm85d3phc2c1bTUifQ.Ubn6vNMeUlWJ4iBomj9_BA';
             const map = new mapboxgl.Map({
                 container: 'map', // container ID
@@ -89,70 +74,26 @@
                 zoom: 12, // starting zoom
                 //interactive: true,
             });
-            /*
-
-            const changeText = document.querySelector("#change-text");
-
-            class ClickableMarker extends mapboxgl.Marker {
-                // new method onClick, sets _handleClick to a function you pass in
-                onClick(handleClick) {
-                    this._handleClick = handleClick;
-                    return this;
-                }
-
-                // the existing _onMapClick was there to trigger a popup
-                // but we are hijacking it to run a function we define
-                _onMapClick(e) {
-                    const targetElement = e.originalEvent.target;
-                    const element = this._element;
-
-                    if (this._handleClick && (targetElement === element || element.contains((targetElement)))) {
-                        this._handleClick();
-                    }
-                }
-            };
-            */
 
             {% for address in addresses %}
-
-
+            /*
+            for (address in addresses) {
+                if (address.author.pk == request.user.pk) {
+                    var marker = new mapboxgl.Marker()
+                        .setLngLat(['{{ address.long }}', '{{ address.lat }}'])
+                        .setPopup(new mapboxgl.Popup().setHTML("<p>{{ address.address }}</p> <form action='{{ address.get_absolute_url }}'><input type='submit' value='discuss'/></form>"))
+                        .addTo(map);
+                }
+            }
+            */
+            {% if address.author.pk == request.user.pk %}
 
             var marker = new mapboxgl.Marker()
                 .setLngLat(['{{ address.long }}', '{{ address.lat }}'])
                 .setPopup(new mapboxgl.Popup().setHTML("<p>{{ address.address }}</p> <form action='{{ address.get_absolute_url }}'><input type='submit' value='discuss'/></form>"))
                 .addTo(map);
 
-
-            /*
-            new ClickableMarker()
-                .setLngLat(['{{ address.long }}', '{{ address.lat }}'])
-                //.setPopup(new mapboxgl.Popup().setHTML("<p>{{ address.address }}</p>"))
-                .onClick(function () {
-                    changeText.textContent = "CHANGED";
-                })
-                .addTo(map);
-                */
-
-            /*
-            const marker = new mapboxgl.Marker()
-                .setLngLat(['{{ address.long }}', '{{ address.lat }}'])
-                .setPopup(new mapboxgl.Popup().setHTML("<p>{{ address.address }}</p>"))
-                .addTo(this.map);
-            // use GetElement to get HTML Element from marker and add event
-            marker.getElement().addEventListener('click', () => {
-                alert("Clicked");
-            });
-            */
-            /*
-            this.service.getAllData().forEach(e => {
-                // create MapBox Marker
-                const marker = new mapboxgl.Marker().setLngLat([e.lon, e.lat]).addTo(this.map);
-                // use GetElement to get HTML Element from marker and add event
-                marker.getElement().addEventListener('click', () => {
-                    alert("Clicked");
-                });
-            });
-            */
+            {% endif %}
 
             {% endfor %}
 

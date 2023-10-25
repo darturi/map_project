@@ -28,6 +28,37 @@ class ProfileView(LoginRequiredMixin, CreateView):
         # context["descriptions"] = Address.objects.all()
         return context
 
+    def form_valid(self, form):
+        address = form.save(commit=False)
+        # specify the author of the comment by fetching user
+        address.author = self.request.user
+        address.save()
+        return super().form_valid(form)
+
+
+class MyPinsView(LoginRequiredMixin, CreateView):
+    template_name = "my_pins.html"
+    model = Address
+    fields = ("address",)
+    success_url = "/my_pins"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context[
+            "mapbox_access_token"
+        ] = "pk.eyJ1IjoiZGFuaWVsYXJ0dXJpIiwiYSI6ImNsbTJ2c2ZrYjF6bHozcm85d3phc2c1bTUifQ.Ubn6vNMeUlWJ4iBomj9_BA"
+        context["addresses"] = [model_obj for model_obj in Address.objects.all()]
+        # context["addresses"] = Address.objects.all()
+        # context["descriptions"] = Address.objects.all()
+        return context
+
+    def form_valid(self, form):
+        address = form.save(commit=False)
+        # specify the author of the comment by fetching user
+        address.author = self.request.user
+        address.save()
+        return super().form_valid(form)
+
 
 class CommentGet(LoginRequiredMixin, DetailView):
     model = Address
@@ -104,3 +135,6 @@ class AddressDetailView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         view = CommentPost.as_view()
         return view(request, *args, **kwargs)
+
+
+# class AddressPost()
