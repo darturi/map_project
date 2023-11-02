@@ -1,5 +1,5 @@
 from django.views.generic import TemplateView, FormView, DetailView
-from .models import Address, Comment
+from .models import Address, Comment, SavedPin
 from django.views import View
 from django.views.generic.edit import CreateView, DeleteView
 from django.urls import reverse_lazy, reverse
@@ -34,6 +34,29 @@ class ProfileView(LoginRequiredMixin, CreateView):
         address.author = self.request.user
         address.save()
         return super().form_valid(form)
+
+
+"""class SaveAddressView(LoginRequiredMixin, CreateView):
+    template_name = "profile.html"
+    model = SavedPin
+    success_url = "/profile"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context[
+            "mapbox_access_token"
+        ] = "pk.eyJ1IjoiZGFuaWVsYXJ0dXJpIiwiYSI6ImNsbTJ2c2ZrYjF6bHozcm85d3phc2c1bTUifQ.Ubn6vNMeUlWJ4iBomj9_BA"
+        context["addresses"] = [model_obj for model_obj in Address.objects.all()]
+        # context["addresses"] = Address.objects.all()
+        # context["descriptions"] = Address.objects.all()
+        return context
+
+    def form_valid(self, form):
+        address = form.save(commit=False)
+        # specify the author of the comment by fetching user
+        address.author = self.request.user
+        address.save()
+        return super().form_valid(form)"""
 
 
 class MyPinsView(LoginRequiredMixin, CreateView):
@@ -119,6 +142,20 @@ class CommentDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def get_success_url(self):
         address = self.object.address
         return reverse("address_detail", kwargs={"pk": address.pk})
+
+    # Tests if the author of the article is the same as the user
+    def test_func(self):
+        obj = self.get_object()
+        return obj.author == self.request.user
+
+
+class AddressDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Address
+    template_name = "address_delete.html"
+    # redirect to article list page upon success
+
+    def get_success_url(self):
+        return reverse("profile")
 
     # Tests if the author of the article is the same as the user
     def test_func(self):

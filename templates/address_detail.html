@@ -98,6 +98,9 @@
     <div class="flex-child-two">
         {% for comment in object.comment_set.all %}
         <p><b>{{ comment.author }}</b> &middot; <i>{{ comment.date }}</i>
+            &middot;
+            <!--Reply to comment link -->
+            <a href="#">Reply</a>
             <!--If statement that will allow comment deletion if user is the one that posted said comment-->
             {% if comment.author.pk == request.user.pk %}
             &middot;
