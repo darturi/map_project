@@ -26,7 +26,7 @@ env.read_env()
 SECRET_KEY = env.str("S_K")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool("debug", default=False)
+DEBUG_ENV = env.bool("debug", default=False)
 
 ALLOWED_HOSTS = []
 
